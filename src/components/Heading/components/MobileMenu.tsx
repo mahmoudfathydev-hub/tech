@@ -6,6 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Input from "./Input";
 
+import MobileCategories from "./MobileCategories";
+
 export default function MobileMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
@@ -21,7 +23,7 @@ export default function MobileMenu() {
     const links = [
         { id: 1, name: "Home", href: "/" },
         { id: 2, name: "Products", href: "/products" },
-        { id: 3, name: "Contact", href: "/contact" },
+        { id: 4, name: "Contact", href: "/contact" },
     ];
 
     return (
@@ -50,13 +52,15 @@ export default function MobileMenu() {
                     </button>
                 </div>
 
-                <div className="px-6 py-8 space-y-8 overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <div className="px-6 py-8 space-y-8 overflow-y-auto max-h-[calc(100vh-180px)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     <div>
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
                             Search Products
                         </p>
                         <Input />
                     </div>
+
+                    <MobileCategories />
 
                     <div>
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
@@ -70,8 +74,8 @@ export default function MobileMenu() {
                                         key={link.id}
                                         href={link.href}
                                         className={`flex justify-between items-center px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-300 ${active
-                                                ? "text-[#2384eb] bg-[#f0f7ff] border-[#dbeafe]"
-                                                : "text-gray-600 bg-gray-50 border-gray-100"
+                                            ? "text-[#2384eb] bg-[#f0f7ff] border-[#dbeafe]"
+                                            : "text-gray-600 bg-gray-50 border-gray-100"
                                             }`}
                                     >
                                         {link.name}

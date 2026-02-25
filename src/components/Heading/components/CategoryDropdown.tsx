@@ -4,13 +4,7 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight, Smartphone, Laptop, Tablet, Headphones, Search } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-
-const CATEGORIES = [
-    { name: "Smartphones", slug: "smartphones", icon: Smartphone, description: "Latest mobile devices" },
-    { name: "Laptops", slug: "laptops", icon: Laptop, description: "High-performance computers" },
-    { name: "Tablets", slug: "tablets", icon: Tablet, description: "Portable touch devices" },
-    { name: "Mobile Accessories", slug: "mobile-accessories", icon: Headphones, description: "Enhance your experience" },
-];
+import { CATEGORIES } from "../constants/categories";
 
 interface Product {
     brand: string;
@@ -82,9 +76,8 @@ const CategoryDropdown = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 15, scale: 0.98 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                        className="absolute top-full left-0 mt-3 w-[500px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50 flex h-[320px]"
+                        className="absolute top-full left-0 mt-3 w-125 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50 flex h-80"
                     >
-                        {/* Categories List (Left Side) */}
                         <div className="w-1/2 border-r border-gray-50 p-3 bg-gray-50/30">
                             <h3 className="px-3 pt-2 pb-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                                 Explore Categories
@@ -119,7 +112,6 @@ const CategoryDropdown = () => {
                             </div>
                         </div>
 
-                        {/* Brands Section (Right Side) */}
                         <div className="w-1/2 p-4 flex flex-col">
                             <AnimatePresence mode="wait">
                                 {selectedCategory ? (
