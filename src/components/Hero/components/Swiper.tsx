@@ -107,50 +107,50 @@ const HeroSwiper: React.FC = () => {
                     const colors = accentColors[index % accentColors.length];
                     return (
                         <SwiperSlide key={product.id}>
-                            <div className={`h-full w-full bg-linear-to-br ${colors.gradient} relative flex items-stretch`}>
+                            <div className={`h-full w-full bg-linear-to-br ${colors.gradient} relative flex flex-col lg:flex-row items-center lg:items-stretch overflow-hidden`}>
                                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                                     <div className="absolute -top-20 -left-20 w-72 h-72 bg-white/5 rounded-full blur-3xl" />
                                     <div className="absolute -bottom-32 -right-20 w-96 h-96 bg-black/10 rounded-full blur-3xl" />
                                     <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
                                 </div>
-                                <div className="relative z-10 flex flex-col justify-center w-1/2 p-8 lg:p-12">
-                                    <span className={`inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider ${colors.badge} backdrop-blur-sm mb-4`}>
+                                <div className="relative z-10 flex flex-col justify-center w-full lg:w-1/2 p-6 sm:p-8 lg:p-12 text-center lg:text-left">
+                                    <span className={`inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full text-[10px] sm:text-xs font-medium uppercase tracking-wider ${colors.badge} backdrop-blur-sm mb-3 sm:mb-4 mx-auto lg:mx-0`}>
                                         <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
                                         {product.category}
                                     </span>
-                                    <h2 className="text-2xl lg:text-4xl font-bold text-white leading-tight mb-3 drop-shadow-lg">
+                                    <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-white leading-tight mb-2 sm:mb-3 drop-shadow-lg">
                                         {product.title}
                                     </h2>
-                                    <p className="text-white/70 text-sm lg:text-base leading-relaxed mb-6 line-clamp-2">
+                                    <p className="text-white/70 text-xs sm:text-sm lg:text-base leading-relaxed mb-4 sm:mb-6 line-clamp-2">
                                         {product.description || "Discover premium quality products curated just for you."}
                                     </p>
-                                    <div className="flex items-center gap-4 mb-6">
-                                        <span className="text-3xl lg:text-4xl font-extrabold text-white">
+                                    <div className="flex items-center justify-center lg:justify-start gap-4 mb-4 sm:mb-6">
+                                        <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white">
                                             ${product.price}
                                         </span>
                                         {product.rating && (
-                                            <span className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-sm text-yellow-300 text-sm font-medium">
+                                            <span className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-sm text-yellow-300 text-xs sm:text-sm font-medium">
                                                 ★ {product.rating.toFixed(1)}
                                             </span>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <button className="px-6 py-2.5 bg-white text-gray-900 rounded-xl font-semibold text-sm hover:bg-white/90 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-black/20 cursor-pointer">
+                                    <div className="flex items-center justify-center lg:justify-start gap-3">
+                                        <button className="px-4 sm:px-6 py-2 sm:py-2.5 bg-white text-gray-900 rounded-xl font-semibold text-xs sm:text-sm hover:bg-white/90 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-black/20 cursor-pointer">
                                             Shop Now
                                         </button>
-                                        <button className="px-6 py-2.5 bg-white/10 text-white rounded-xl font-semibold text-sm backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
+                                        <button className="px-4 sm:px-6 py-2 sm:py-2.5 bg-white/10 text-white rounded-xl font-semibold text-xs sm:text-sm backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
                                             Details →
                                         </button>
                                     </div>
                                 </div>
-                                <div className="relative z-10 w-1/2 flex items-center justify-center p-6">
+                                <div className="relative z-10 w-full lg:w-1/2 h-40 sm:h-56 lg:h-auto flex items-center justify-center p-4 sm:p-6">
                                     <div className="relative w-full h-full flex items-center justify-center">
                                         <div className="absolute inset-0 bg-white/10 rounded-2xl blur-2xl scale-90" />
                                         <Image
                                             src={product.images[2] || product.thumbnail}
                                             alt={product.title}
                                             fill
-                                            sizes="(max-width: 768px) 50vw, 25vw"
+                                            sizes="(max-width: 768px) 100vw, 50vw"
                                             className="relative object-contain drop-shadow-2xl transition-transform duration-700 hover:scale-105 rounded-2xl"
                                         />
                                     </div>

@@ -12,7 +12,7 @@ function Sale() {
           direction={1}
           className="flex items-center justify-center"
         >
-          <span className="text-2xl font-bold mx-8 text-white whitespace-nowrap">
+          <span className="text-lg sm:text-2xl font-bold mx-8 text-white whitespace-nowrap">
             SALE 35% until the end of the month
           </span>
         </ScrollVelocityRow>

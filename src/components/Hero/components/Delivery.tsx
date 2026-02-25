@@ -48,9 +48,9 @@ function Delivery() {
             <div
               className={`h-full w-full bg-linear-to-br ${item.bgGradient} flex items-center justify-center`}
             >
-              <div className="flex flex-col items-center gap-4 text-white">
-                <div className="text-white">{item.icon}</div>
-                <span className="text-xl font-semibold text-center px-4">
+              <div className="flex flex-col items-center gap-2 sm:gap-4 text-white">
+                <div className="text-white scale-75 sm:scale-100">{item.icon}</div>
+                <span className="text-base sm:text-xl font-semibold text-center px-4">
                   {item.text}
                 </span>
               </div>
