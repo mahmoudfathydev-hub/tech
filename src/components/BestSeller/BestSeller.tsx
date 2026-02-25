@@ -1,0 +1,176 @@
+"use client";
+
+import React, { useEffect, useRef } from "react";
+import Image from "next/image";
+import { useProducts } from "@/context/ProductContext";
+import { Product } from "@/types/product";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const ProductCard = ({ product }: { product: Product }) => {
+    return (
+        <div className="card shrink-0 min-w-70 group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+            <div className="relative h-56 w-full bg-gray-50 dark:bg-gray-800/50 overflow-hidden">
+                <Image
+                    src={product.thumbnail}
+                    alt={product.title}
+                    fill
+                    className="object-contain p-4 transition-transform duration-700 group-hover:scale-110"
+                />
+                {product.discountPercentage > 0 && (
+                    <div className="absolute top-4 left-4 z-10">
+                        <span className="px-3 py-1 bg-red-500 text-white text-[10px] font-bold rounded-full shadow-lg shadow-red-500/30">
+                            -{Math.round(product.discountPercentage)}% OFF
+                        </span>
+                    </div>
+                )}
+                <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button className="p-2 bg-white/80 backdrop-blur-md rounded-full shadow-xl hover:bg-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div className="p-6">
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[10px] uppercase tracking-widest text-[#2384eb] font-bold">
+                        {product.category}
+                    </span>
+                    <span className="h-1 w-1 bg-gray-300 rounded-full"></span>
+                    <div className="flex items-center">
+                        <span className="text-yellow-400 text-xs">★</span>
+                        <span className="text-[10px] font-bold ml-1 text-gray-500">{product.rating}</span>
+                    </div>
+                </div>
+
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate mb-1">
+                    {product.title}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-4 line-clamp-1">
+                    {product.brand}
+                </p>
+
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                        <span className="text-2xl font-black text-[#2384eb]">
+                            ${product.price}
+                        </span>
+                        {product.discountPercentage > 0 && (
+                            <span className="text-xs text-gray-400 line-through">
+                                ${Math.round(product.price * (1 + product.discountPercentage / 100))}
+                            </span>
+                        )}
+                    </div>
+                    <button className="p-3 bg-gray-900 dark:bg-[#2384eb] text-white rounded-2xl cursor-pointer transform active:scale-90 transition-all hover:shadow-lg hover:shadow-[#2384eb]/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const BestSeller = () => {
+    const { bestSellers, isLoading } = useProducts();
+    const containerRef = useRef<HTMLDivElement>(null);
+    const cardsRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (isLoading || bestSellers.length === 0) return;
+
+        const ctx = gsap.context(() => {
+            const cardsContainer = cardsRef.current;
+            const mainContainer = containerRef.current;
+            if (!cardsContainer || !mainContainer) return;
+
+            const totalScroll =
+                cardsContainer.scrollWidth - mainContainer.offsetWidth;
+
+            if (totalScroll <= 0) return;
+
+            gsap.to(cardsContainer, {
+                x: -totalScroll,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: mainContainer,
+                    pin: true,
+                    scrub: 1,
+                    start: "top top",
+                    end: () => "+=" + totalScroll,
+                    invalidateOnRefresh: true,
+                },
+            });
+        }, containerRef);
+
+        return () => ctx.revert();
+    }, [isLoading, bestSellers.length]);
+
+    if (isLoading)
+        return (
+            <div className="py-20 flex justify-center items-center h-screen">
+                <div className="w-12 h-12 border-4 border-[#2384eb]/20 border-t-[#2384eb] rounded-full animate-spin"></div>
+            </div>
+        );
+
+    return (
+        <section
+            ref={containerRef}
+            className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center py-16 bg-linear-to-b from-transparent to-gray-50/50 dark:to-gray-900/10"
+        >
+            <div className="container mx-auto px-4 z-10 mb-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <span className="inline-block px-3 py-1 bg-[#2384eb]/10 text-[#2384eb] rounded-full text-[10px] uppercase tracking-widest font-bold mb-3 border border-[#2384eb]/20">
+                            Popular Choice
+                        </span>
+                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+                            Best Sellers <span className="text-[#2384eb]">Products.</span>
+                        </h2>
+                        <p className="mt-2 text-gray-500 dark:text-gray-400 font-medium max-w-md">
+                            Discover our top-rated tech products that customers love most this month.
+                        </p>
+                    </div>
+                    <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-2xl font-bold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shadow-sm group">
+                        View Collection
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#2384eb] transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                ref={cardsRef}
+                className="flex flex-nowrap items-center px-4 md:px-10 gap-6 w-max"
+            >
+                {bestSellers.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                ))}
+
+                <div className="min-w-70 h-100 bg-linear-to-br from-[#2384eb] to-[#144a94] rounded-3xl p-8 flex flex-col justify-end text-white relative overflow-hidden group cursor-pointer shadow-xl">
+                    <div className="relative z-10">
+                        <h3 className="text-2xl font-black mb-2 leading-tight">
+                            More Tech Waiting For You
+                        </h3>
+                        <p className="text-white/80 text-sm mb-6">
+                            Explore 50+ more products in our collection.
+                        </p>
+                        <div className="flex items-center gap-2 font-bold group-hover:translate-x-2 transition-transform">
+                            Browse All <span className="text-xl">→</span>
+                        </div>
+                    </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                    <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-blue-400/20 rounded-full blur-xl" />
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default BestSeller;

@@ -50,7 +50,7 @@ function Hero() {
                     <div className="relative z-10 flex items-center gap-4">
                         <div className="hidden xl:flex flex-col items-end mr-4">
                             <span className="text-xs uppercase opacity-70">Ending in</span>
-                            <span className="text-xl font-mono font-bold">12:45:00</span>
+                            <span className="text-xl font-mono font-bold">10 Octoper </span>
                         </div>
                         <button className="px-6 py-2.5 bg-white text-[#2384eb] rounded-xl font-bold transform transition-all duration-300 group-hover:scale-105 active:scale-95 whitespace-nowrap shadow-lg shadow-black/10 hidden sm:block hover:bg-slate-50">
                             Shop All Deals
