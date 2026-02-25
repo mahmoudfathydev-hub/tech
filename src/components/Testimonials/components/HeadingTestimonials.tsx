@@ -1,7 +1,8 @@
 function HeadingTestimonials() {
     return (
         <section
-            data-aos="fade-right">
+            data-aos="fade-right"
+            data-aos-offset="200">
             <div className="container mx-auto px-4 z-10 mb-10 mt-16">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>

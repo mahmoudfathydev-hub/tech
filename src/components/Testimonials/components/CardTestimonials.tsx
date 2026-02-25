@@ -3,8 +3,6 @@
 import React, { useMemo } from "react";
 import { useProducts } from "@/context/ProductContext";
 import Image from "next/image";
-
-// Generate a stable seed once when the module loads
 const SHUFFLE_SEED = Date.now();
 
 const CardTestimonials = () => {
@@ -22,8 +20,6 @@ const CardTestimonials = () => {
     );
 
     const filtered = allReviews.filter((review) => review.rating >= 4);
-
-    // Use a deterministic shuffle based on the seed
     const shuffled = [...filtered].sort((a, b) => {
       const hashA =
         a.reviewerEmail
@@ -70,13 +66,14 @@ const CardTestimonials = () => {
             <div
               key={`${review.reviewerEmail}-${idx}`}
               data-aos={isMiddle ? "zoom-in-up" : "zoom-in-down"}
+              data-aos-offset="200"
+              data-aos-delay={idx * 100}
               className={`
-                                bg-white dark:bg-gray-900 
+                                bg-[#6b6b6454] dark:bg-gray-900 
                                 rounded-3xl 
                                 border border-gray-100 dark:border-white/10
                                 shadow-xl
                                 p-6 md:p-8
-                                transition-none
                                 ${isMiddle ? "mb-0 md:mb-0" : "mb-8 md:mb-20"}`}
             >
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-[#2384eb] to-[#144a94] flex items-center justify-center text-white text-lg md:text-xl font-bold mb-4 md:mb-6">
