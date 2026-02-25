@@ -1,32 +1,27 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import CategoryDropdown from "./CategoryDropdown";
 
 function Links() {
     const pathname = usePathname();
 
     const links = [
-        {
-            id: 1,
-            name: "Home",
-            href: "/",
-        },
-        {
-            id: 2,
-            name: "Products",
-            href: "/products",
-        },
-        {
-            id: 3,
-            name: "Contact",
-            href: "/contact",
-        },
+        { id: 1, name: "Home", href: "/" },
+        { id: 2, name: "Products", href: "/products" },
+        { id: 3, name: "Categories", href: "/categories", isDropdown: true },
+        { id: 4, name: "Contact", href: "/contact" },
     ];
 
     return (
         <div className="flex items-center gap-1">
             {links.map((link) => {
+                if (link.isDropdown) {
+                    return <CategoryDropdown key={link.id} />;
+                }
+
                 const isActive = pathname === link.href;
                 return (
                     <Link
