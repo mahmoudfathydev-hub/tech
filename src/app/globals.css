@@ -175,3 +175,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.container {
+  max-width: 1400px;
+  margin-right: auto;
+  margin-left: auto;
+}

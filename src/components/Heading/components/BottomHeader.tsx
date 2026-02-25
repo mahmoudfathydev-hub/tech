@@ -9,7 +9,8 @@ function BottomHeader() {
         <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-10 z-40">
             <div className="container max-w-350 mx-auto px-6 py-3 flex items-center justify-between gap-8">
                 <div className="flex items-center gap-3 shrink-0">
-                    <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-linear-to-br from-[#2384eb] to-[#1c6fd1] flex items-center justify-center shadow-md shadow-blue-200/50">
+                    <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-linear-to-br from-[#2384eb] to-[#1c6fd1] 
+                    flex items-center justify-center shadow-md shadow-blue-200/50">
                         <Image
                             src="/images/logo.png"
                             width={50}
