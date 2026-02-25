@@ -1,6 +1,6 @@
 E-Commerce Electronics Store
 │
-├── Root Layout
+├── Root Layout                 (DONE)✔✔
 │   ├── Navbar
 │   │   ├── Logo
 │   │   ├── Search Bar

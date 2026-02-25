@@ -1,5 +1,3 @@
-import React from "react";
-
 const BestSellerHeader = () => {
     return (
         <div className="container mx-auto px-4 z-10 mb-10">
