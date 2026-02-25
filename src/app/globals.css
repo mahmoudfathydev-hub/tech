@@ -181,3 +181,7 @@
   margin-right: auto;
   margin-left: auto;
 }
+
+body, html {
+  overflow-x: hidden;
+}
