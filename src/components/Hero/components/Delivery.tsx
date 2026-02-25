@@ -46,7 +46,7 @@ function Delivery() {
         {deliveryItems.map((item, index) => (
           <SwiperSlide key={index}>
             <div
-              className={`h-full w-full bg-gradient-to-br ${item.bgGradient} flex items-center justify-center`}
+              className={`h-full w-full bg-linear-to-br ${item.bgGradient} flex items-center justify-center`}
             >
               <div className="flex flex-col items-center gap-4 text-white">
                 <div className="text-white">{item.icon}</div>
