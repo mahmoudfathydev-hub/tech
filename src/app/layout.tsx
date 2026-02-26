@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 
 import { ProductProvider } from "@/context/ProductContext";
 import Footer from "@/components/Foot/Footer";
+import { BackToTop } from "@/components/common/BackToTop";
 
 export default function RootLayout({
   children,
@@ -38,6 +39,7 @@ export default function RootLayout({
           <Toaster position="top-center" richColors />
           {children}
           <Footer />
+          <BackToTop />
         </ProductProvider>
       </body>
     </html>

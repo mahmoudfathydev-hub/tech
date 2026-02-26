@@ -3,6 +3,7 @@
 import React from "react";
 import { ArrowRight, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface OrderSummaryProps {
     total: number;
@@ -36,10 +37,12 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ total }) => {
                     </div>
                 </div>
 
-                <Button className="w-full py-8 bg-[#050505] hover:bg-[#151515] text-white rounded-2xl text-xl font-bold shadow-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3">
-                    Checkout Now
-                    <ArrowRight className="w-6 h-6" />
-                </Button>
+                <Link href="/checkout" className="block w-full">
+                    <Button className="w-full py-8 bg-[#050505] hover:bg-[#151515] text-white rounded-2xl text-xl font-bold shadow-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+                        Checkout Now
+                        <ArrowRight className="w-6 h-6" />
+                    </Button>
+                </Link>
 
                 <div className="mt-8 flex items-center justify-center gap-2 text-center text-xs text-muted-foreground font-medium uppercase tracking-widest bg-secondary/30 py-3 rounded-xl border border-border">
                     <ShieldAlert className="w-4 h-4 text-primary" />

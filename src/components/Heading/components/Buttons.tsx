@@ -8,7 +8,7 @@ import { useProducts } from "@/context/ProductContext";
 
 function Buttons() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const { cartCount } = useProducts();
+    const { cartCount, wishlistCount } = useProducts();
 
     useEffect(() => {
         const checkAuth = () => {
@@ -30,15 +30,19 @@ function Buttons() {
 
     return (
         <div className="flex items-center gap-2">
-            <button
-                className="relative p-2.5 rounded-xl text-gray-500 hover:text-rose-500 hover:bg-rose-50 transition-all duration-300 cursor-pointer"
-                aria-label="Wishlist"
-            >
-                <Heart size={20} strokeWidth={1.8} />
-                <span className="absolute -top-0.5 -right-0.5 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
-                    0
-                </span>
-            </button>
+            <Link href="/favorites">
+                <button
+                    className="relative p-2.5 rounded-xl text-gray-500 hover:text-rose-500 hover:bg-rose-50 transition-all duration-300 cursor-pointer"
+                    aria-label="Wishlist"
+                >
+                    <Heart size={20} strokeWidth={1.8} />
+                    {wishlistCount > 0 && (
+                        <span className="absolute -top-0.5 -right-0.5 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
+                            {wishlistCount}
+                        </span>
+                    )}
+                </button>
+            </Link>
             <Link href={"/cart"}>
                 <button
                     className="relative p-2.5 rounded-xl text-gray-500 hover:text-[#1c6fd1] hover:bg-blue-50 transition-all duration-300 cursor-pointer"

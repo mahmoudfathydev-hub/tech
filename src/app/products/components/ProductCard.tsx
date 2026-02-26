@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { Star, Eye } from "lucide-react";
+import { Star, Eye, ShoppingCart, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Product, ViewMode } from "@/types/product";
 import { useProducts } from "@/context/ProductContext";
-import { ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
     product: Product;
@@ -19,10 +18,17 @@ export default function ProductCard({
     viewMode,
     onViewDetails,
 }: ProductCardProps) {
-    const { addToCart } = useProducts();
+    const { addToCart, toggleWishlist, isInWishlist } = useProducts();
+    const isFavorite = isInWishlist(product.id);
+
     const discountedPrice = (
         product.price * (1 - product.discountPercentage / 100)
     ).toFixed(2);
+
+    const handleToggleWishlist = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        toggleWishlist(product);
+    };
 
     if (viewMode === "list") {
         return (
@@ -40,10 +46,19 @@ export default function ProductCard({
                         loading="lazy"
                     />
                     {product.discountPercentage > 5 && (
-                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-500 text-white text-[10px]">
+                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-500 text-white text-[10px] z-10">
                             -{Math.round(product.discountPercentage)}%
                         </Badge>
                     )}
+                    <button
+                        onClick={handleToggleWishlist}
+                        className={`absolute top-2 right-2 z-10 p-2 rounded-lg transition-all duration-300 backdrop-blur-md shadow-sm transform active:scale-90 ${isFavorite
+                            ? "bg-red-500 text-white shadow-red-500/20"
+                            : "bg-white/80 text-gray-500 hover:text-red-500"
+                            }`}
+                    >
+                        <Heart size={14} fill={isFavorite ? "currentColor" : "none"} strokeWidth={2.5} />
+                    </button>
                 </div>
                 <div className="flex flex-col justify-between flex-1 min-w-0 py-1">
                     <div>
@@ -111,14 +126,25 @@ export default function ProductCard({
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                 />
+
+                <button
+                    onClick={handleToggleWishlist}
+                    className={`absolute top-3 right-3 z-20 p-2 rounded-xl transition-all duration-300 backdrop-blur-md shadow-sm transform active:scale-90 ${isFavorite
+                        ? "bg-red-500 text-white shadow-red-500/20"
+                        : "bg-white/80 text-gray-500 hover:text-red-500"
+                        }`}
+                >
+                    <Heart size={16} fill={isFavorite ? "currentColor" : "none"} strokeWidth={2.5} />
+                </button>
+
                 {product.discountPercentage > 5 && (
-                    <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500 text-white text-[10px]">
+                    <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500 text-white text-[10px] z-10">
                         -{Math.round(product.discountPercentage)}%
                     </Badge>
                 )}
                 <div
                     className="absolute inset-0 bg-black/0 group-hover:bg-black/20
-                     transition-colors duration-300 flex items-center justify-center"
+                     transition-colors duration-300 flex items-center justify-center z-10"
                 >
                     <Button
                         size="sm"
@@ -162,3 +188,4 @@ export default function ProductCard({
         </div>
     );
 }
+

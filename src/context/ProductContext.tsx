@@ -77,6 +77,12 @@ interface ProductContextType {
   clearCart: () => void;
   cartTotal: number;
   cartCount: number;
+
+  // Wishlist Actions
+  wishlist: Product[];
+  toggleWishlist: (product: Product) => void;
+  isInWishlist: (productId: number) => boolean;
+  wishlistCount: number;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -231,6 +237,10 @@ export const ProductProvider = ({
         clearCart: () => { },
         cartTotal: 0,
         cartCount: 0,
+        wishlist: [],
+        toggleWishlist: () => { },
+        isInWishlist: () => false,
+        wishlistCount: 0,
       }}
     >
       <ProductProviderInner
@@ -380,6 +390,26 @@ function ProductLogic({
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Wishlist state
+  const [wishlist, setWishlist] = useState<Product[]>([]);
+
+  // Load wishlist from local storage
+  useEffect(() => {
+    const savedWishlist = localStorage.getItem("wishlist");
+    if (savedWishlist) {
+      try {
+        setWishlist(JSON.parse(savedWishlist));
+      } catch (e) {
+        console.error("Failed to parse wishlist", e);
+      }
+    }
+  }, []);
+
+  // Save wishlist to local storage
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
@@ -522,6 +552,23 @@ function ProductLogic({
     toast.info("Cart cleared");
   }, []);
 
+  // ── Wishlist Actions ──────────────────────────────────────────
+  const toggleWishlist = useCallback((product: Product) => {
+    setWishlist((prev) => {
+      const exists = prev.find((item) => item.id === product.id);
+      if (exists) {
+        toast.info(`Removed ${product.title} from favorites`);
+        return prev.filter((item) => item.id !== product.id);
+      }
+      toast.success(`Added ${product.title} to favorites`);
+      return [...prev, product];
+    });
+  }, []);
+
+  const isInWishlist = useCallback((productId: number) => {
+    return wishlist.some((item) => item.id === productId);
+  }, [wishlist]);
+
   // Derived: cart data
   const cartTotal = useMemo(
     () => cart.reduce((total, item) => total + item.price * item.quantity, 0),
@@ -532,6 +579,8 @@ function ProductLogic({
     () => cart.reduce((count, item) => count + item.quantity, 0),
     [cart]
   );
+
+  const wishlistCount = useMemo(() => wishlist.length, [wishlist]);
 
   return (
     <ProductContext.Provider
@@ -574,6 +623,10 @@ function ProductLogic({
         clearCart,
         cartTotal,
         cartCount,
+        wishlist,
+        toggleWishlist,
+        isInWishlist,
+        wishlistCount,
       }}
     >
       {children}

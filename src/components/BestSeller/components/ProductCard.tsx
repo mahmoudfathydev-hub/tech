@@ -2,17 +2,24 @@ import React from "react";
 import Image from "next/image";
 import { Product } from "@/types/product";
 import { useProducts } from "@/context/ProductContext";
+import { Heart } from "lucide-react";
 
 interface ProductCardProps {
     product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-    const { openProductModal, addToCart } = useProducts();
+    const { openProductModal, addToCart, toggleWishlist, isInWishlist } = useProducts();
+    const isFavorite = isInWishlist(product.id);
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.stopPropagation();
         addToCart(product);
+    };
+
+    const handleToggleWishlist = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        toggleWishlist(product);
     };
 
     return (
@@ -27,6 +34,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     fill
                     className="object-contain p-4 transition-transform duration-700 group-hover:scale-110"
                 />
+
+                <button
+                    onClick={handleToggleWishlist}
+                    className={`absolute top-4 right-4 z-20 p-2.5 rounded-2xl transition-all duration-300 backdrop-blur-md shadow-lg transform active:scale-90 ${isFavorite
+                            ? "bg-red-500 text-white shadow-red-500/20"
+                            : "bg-white/80 dark:bg-gray-800/80 text-gray-500 hover:text-red-500"
+                        }`}
+                >
+                    <Heart size={18} fill={isFavorite ? "currentColor" : "none"} strokeWidth={2.5} />
+                </button>
+
                 {product.discountPercentage > 0 && (
                     <div className="absolute top-4 left-4 z-10">
                         <span className="px-3 py-1 bg-red-500 text-white text-[10px] font-bold rounded-full shadow-lg shadow-red-500/30">
@@ -79,6 +97,5 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
     );
 };
-
 
 export default ProductCard;
