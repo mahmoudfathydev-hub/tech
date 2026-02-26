@@ -5,6 +5,8 @@ import { Star, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Product, ViewMode } from "@/types/product";
+import { useProducts } from "@/context/ProductContext";
+import { ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
     product: Product;
@@ -17,6 +19,7 @@ export default function ProductCard({
     viewMode,
     onViewDetails,
 }: ProductCardProps) {
+    const { addToCart } = useProducts();
     const discountedPrice = (
         product.price * (1 - product.discountPercentage / 100)
     ).toFixed(2);
@@ -76,6 +79,14 @@ export default function ProductCard({
                             >
                                 <Eye className="h-3.5 w-3.5" />
                                 Details
+                            </Button>
+                            <Button
+                                size="sm"
+                                className="gap-1.5"
+                                onClick={() => addToCart(product)}
+                            >
+                                <ShoppingCart className="h-3.5 w-3.5" />
+                                Add to Cart
                             </Button>
                         </div>
                     </div>
@@ -139,6 +150,14 @@ export default function ProductCard({
                         {product.rating.toFixed(1)}
                     </span>
                 </div>
+                <Button
+                    size="sm"
+                    className="w-full mt-4 gap-1.5 rounded-lg font-bold"
+                    onClick={() => addToCart(product)}
+                >
+                    <ShoppingCart className="h-3.5 w-3.5" />
+                    Add to Cart
+                </Button>
             </div>
         </div>
     );

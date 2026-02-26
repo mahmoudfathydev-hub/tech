@@ -8,7 +8,12 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-    const { openProductModal } = useProducts();
+    const { openProductModal, addToCart } = useProducts();
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        addToCart(product);
+    };
 
     return (
         <div
@@ -61,7 +66,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
                             </span>
                         )}
                     </div>
-                    <button className="p-3 bg-gray-900 dark:bg-[#1c6fd1] text-white rounded-2xl cursor-pointer transform active:scale-90 transition-all hover:shadow-lg hover:shadow-[#1c6fd1]/20">
+                    <button
+                        onClick={handleAddToCart}
+                        className="p-3 bg-gray-900 dark:bg-[#1c6fd1] text-white rounded-2xl cursor-pointer transform active:scale-90 transition-all hover:shadow-lg hover:shadow-[#1c6fd1]/20"
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>

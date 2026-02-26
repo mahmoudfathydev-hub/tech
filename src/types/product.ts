@@ -21,6 +21,10 @@ export interface Product {
   reviews: Review[];
 }
 
+export interface CartItem extends Product {
+  quantity: number;
+}
+
 export interface ProductsResponse {
   products: Product[];
   total: number;

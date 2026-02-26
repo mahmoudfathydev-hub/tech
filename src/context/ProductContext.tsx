@@ -8,8 +8,10 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { toast } from "sonner";
 import {
   Product,
+  CartItem,
   SortOption,
   ViewMode,
   ProductFilters,
@@ -50,6 +52,7 @@ interface ProductContextType {
   filters: ProductFilters;
   isModalOpen: boolean;
   isFilterSidebarOpen: boolean;
+  cart: CartItem[];
 
   // Actions
   setSearchTerm: (term: string) => void;
@@ -66,6 +69,14 @@ interface ProductContextType {
   openProductModal: (product: Product) => void;
   closeProductModal: () => void;
   setFilterSidebarOpen: (open: boolean) => void;
+
+  // Cart Actions
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: number) => void;
+  updateCartQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
+  cartTotal: number;
+  cartCount: number;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -213,6 +224,13 @@ export const ProductProvider = ({
         openProductModal: () => { },
         closeProductModal: () => { },
         setFilterSidebarOpen,
+        cart: [],
+        addToCart: () => { },
+        removeFromCart: () => { },
+        updateCartQuantity: () => { },
+        clearCart: () => { },
+        cartTotal: 0,
+        cartCount: 0,
       }}
     >
       <ProductProviderInner
@@ -342,6 +360,25 @@ function ProductLogic({
   setFilterSidebarOpen,
   debouncedSearch
 }: any) {
+  // Cart state
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  // Load cart from local storage
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        console.error("Failed to parse cart", e);
+      }
+    }
+  }, []);
+
+  // Save cart to local storage
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   // Reset page when filters change
   useEffect(() => {
@@ -445,6 +482,57 @@ function ProductLogic({
     setSelectedProduct(null);
   }, [setSelectedProduct, setIsModalOpen]);
 
+  // ── Cart Actions ──────────────────────────────────────────────
+  const addToCart = useCallback((product: Product) => {
+    setCart((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+      if (existingItem) {
+        toast.success(`Updated ${product.title} quantity in cart`);
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      toast.success(`Added ${product.title} to cart`);
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  }, []);
+
+  const removeFromCart = useCallback((productId: number) => {
+    setCart((prev) => {
+      const item = prev.find(p => p.id === productId);
+      if (item) toast.info(`Removed ${item.title} from cart`);
+      return prev.filter((item) => item.id !== productId);
+    });
+  }, []);
+
+  const updateCartQuantity = useCallback((productId: number, quantity: number) => {
+    if (quantity < 1) {
+      removeFromCart(productId);
+      return;
+    }
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === productId ? { ...item, quantity } : item
+      )
+    );
+  }, [removeFromCart]);
+
+  const clearCart = useCallback(() => {
+    setCart([]);
+    toast.info("Cart cleared");
+  }, []);
+
+  // Derived: cart data
+  const cartTotal = useMemo(
+    () => cart.reduce((total, item) => total + item.price * item.quantity, 0),
+    [cart]
+  );
+
+  const cartCount = useMemo(
+    () => cart.reduce((count, item) => count + item.quantity, 0),
+    [cart]
+  );
+
   return (
     <ProductContext.Provider
       value={{
@@ -479,6 +567,13 @@ function ProductLogic({
         openProductModal,
         closeProductModal,
         setFilterSidebarOpen,
+        cart,
+        addToCart,
+        removeFromCart,
+        updateCartQuantity,
+        clearCart,
+        cartTotal,
+        cartCount,
       }}
     >
       {children}

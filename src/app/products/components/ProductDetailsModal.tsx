@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Product } from "@/types/product";
+import { useProducts } from "@/context/ProductContext";
 
 interface ProductDetailsModalProps {
     product: Product | null;
@@ -25,6 +26,7 @@ export default function ProductDetailsModal({
     isOpen,
     onClose,
 }: ProductDetailsModalProps) {
+    const { addToCart } = useProducts();
     const [selectedImage, setSelectedImage] = useState(0);
 
     if (!product) return null;
@@ -150,8 +152,8 @@ export default function ProductDetailsModal({
                                                         <Star
                                                             key={i}
                                                             className={`h-3 w-3 ${i < review.rating
-                                                                    ? "fill-yellow-400 text-yellow-400"
-                                                                    : "text-muted-foreground/30"
+                                                                ? "fill-yellow-400 text-yellow-400"
+                                                                : "text-muted-foreground/30"
                                                                 }`}
                                                         />
                                                     ))}
@@ -169,7 +171,12 @@ export default function ProductDetailsModal({
                             </div>
                         )}
 
-                        <Button id="add-to-cart-modal" className="w-full mt-2" size="lg">
+                        <Button
+                            id="add-to-cart-modal"
+                            className="w-full mt-2"
+                            size="lg"
+                            onClick={() => addToCart(product)}
+                        >
                             Add to Cart
                         </Button>
                     </div>

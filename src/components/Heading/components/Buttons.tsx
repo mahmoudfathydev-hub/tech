@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { ShoppingCart, Heart, User, LogOut } from "lucide-react";
 import Link from "next/link";
+import { useProducts } from "@/context/ProductContext";
 
 function Buttons() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { cartCount } = useProducts();
 
     useEffect(() => {
         const checkAuth = () => {
@@ -37,15 +39,19 @@ function Buttons() {
                     0
                 </span>
             </button>
-            <button
-                className="relative p-2.5 rounded-xl text-gray-500 hover:text-[#1c6fd1] hover:bg-blue-50 transition-all duration-300 cursor-pointer"
-                aria-label="Shopping Cart"
-            >
-                <ShoppingCart size={20} strokeWidth={1.8} />
-                <span className="absolute -top-0.5 -right-0.5 bg-[#1c6fd1] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
-                    0
-                </span>
-            </button>
+            <Link href={"/cart"}>
+                <button
+                    className="relative p-2.5 rounded-xl text-gray-500 hover:text-[#1c6fd1] hover:bg-blue-50 transition-all duration-300 cursor-pointer"
+                    aria-label="Shopping Cart"
+                >
+                    <ShoppingCart size={20} strokeWidth={1.8} />
+                    {cartCount > 0 && (
+                        <span className="absolute -top-0.5 -right-0.5 bg-[#1c6fd1] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
+                            {cartCount}
+                        </span>
+                    )}
+                </button>
+            </Link>
             <div className="w-px h-6 bg-gray-200 mx-1" />
 
             {!isLoggedIn ? (
