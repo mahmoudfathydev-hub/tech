@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 };
 
 import { ProductProvider } from "@/context/ProductContext";
+import Footer from "@/components/Foot/Footer";
 
 export default function RootLayout({
   children,
@@ -34,6 +35,7 @@ export default function RootLayout({
           <AosInit />
           <Header />
           {children}
+          <Footer />
         </ProductProvider>
       </body>
     </html>
