@@ -1,72 +1,327 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
-import { Product } from "@/types/product";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
+import {
+  Product,
+  SortOption,
+  ViewMode,
+  ProductFilters,
+} from "@/types/product";
 import { fetchAllProducts } from "@/api/products";
+import { useDebounce } from "@/hooks/useDebounce";
 
+// ─── Constants ────────────────────────────────────────────────────
+const ITEMS_PER_PAGE = 12;
+const DEFAULT_FILTERS: ProductFilters = {
+  categories: [],
+  brands: [],
+  priceRange: [0, 10000],
+  minRating: 0,
+};
+
+// ─── Context Type ─────────────────────────────────────────────────
 interface ProductContextType {
-    products: Product[];
-    filteredProducts: Product[];
-    bestSellers: Product[];
-    isLoading: boolean;
-    searchTerm: string;
-    setSearchTerm: (term: string) => void;
+  // Data
+  products: Product[];
+  filteredProducts: Product[];
+  paginatedProducts: Product[];
+  bestSellers: Product[];
+  selectedProduct: Product | null;
+
+  // Derived data
+  allCategories: string[];
+  allBrands: string[];
+  totalPages: number;
+  totalResults: number;
+
+  // State
+  isLoading: boolean;
+  searchTerm: string;
+  sortOption: SortOption;
+  viewMode: ViewMode;
+  currentPage: number;
+  filters: ProductFilters;
+  isModalOpen: boolean;
+  isFilterSidebarOpen: boolean;
+
+  // Actions
+  setSearchTerm: (term: string) => void;
+  setSortOption: (option: SortOption) => void;
+  setViewMode: (mode: ViewMode) => void;
+  setCurrentPage: (page: number) => void;
+  setFilters: (filters: ProductFilters) => void;
+  toggleCategory: (category: string) => void;
+  toggleBrand: (brand: string) => void;
+  setPriceRange: (range: [number, number]) => void;
+  setMinRating: (rating: number) => void;
+  clearFilters: () => void;
+  removeFilter: (type: string, value: string) => void;
+  openProductModal: (product: Product) => void;
+  closeProductModal: () => void;
+  setFilterSidebarOpen: (open: boolean) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider = ({ children }: { children: React.ReactNode }) => {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
+// ─── Helper: Sort Products ────────────────────────────────────────
+function sortProducts(products: Product[], option: SortOption): Product[] {
+  const sorted = [...products];
+  switch (option) {
+    case "price-asc":
+      return sorted.sort((a, b) => a.price - b.price);
+    case "price-desc":
+      return sorted.sort((a, b) => b.price - a.price);
+    case "rating":
+      return sorted.sort((a, b) => b.rating - a.rating);
+    case "name-asc":
+      return sorted.sort((a, b) => a.title.localeCompare(b.title));
+    case "name-desc":
+      return sorted.sort((a, b) => b.title.localeCompare(a.title));
+    default:
+      return sorted;
+  }
+}
 
-    useEffect(() => {
-        const loadData = async () => {
-            setIsLoading(true);
-            const data = await fetchAllProducts();
-            setProducts(data);
-            setIsLoading(false);
-        };
-        loadData();
-    }, []);
+// ─── Helper: Filter Products ──────────────────────────────────────
+function filterProducts(
+  products: Product[],
+  searchTerm: string,
+  filters: ProductFilters
+): Product[] {
+  return products.filter((product) => {
+    // Search filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      const matchesSearch =
+        product.title.toLowerCase().includes(term) ||
+        product.brand?.toLowerCase().includes(term) ||
+        product.category.toLowerCase().includes(term) ||
+        product.description.toLowerCase().includes(term);
+      if (!matchesSearch) return false;
+    }
 
-    // Local filtering logic - no extra API requests
-    const filteredProducts = useMemo(() => {
-        if (!searchTerm) return products;
-        return products.filter((product) =>
-            product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.category.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [products, searchTerm]);
+    // Category filter
+    if (
+      filters.categories.length > 0 &&
+      !filters.categories.includes(product.category)
+    ) {
+      return false;
+    }
 
-    // Local sorting logic for "Best Sellers" (e.g., by rating or discount)
-    const bestSellers = useMemo(() => {
-        return [...products]
-            .sort((a, b) => b.rating - a.rating)
-            .slice(0, 8); // Top 8 highest rated products
-    }, [products]);
+    // Brand filter
+    if (
+      filters.brands.length > 0 &&
+      !filters.brands.includes(product.brand)
+    ) {
+      return false;
+    }
 
-    return (
-        <ProductContext.Provider
-            value={{
-                products,
-                filteredProducts,
-                bestSellers,
-                isLoading,
-                searchTerm,
-                setSearchTerm,
-            }}
-        >
-            {children}
-        </ProductContext.Provider>
-    );
+    // Price range filter
+    if (
+      product.price < filters.priceRange[0] ||
+      product.price > filters.priceRange[1]
+    ) {
+      return false;
+    }
+
+    // Rating filter
+    if (product.rating < filters.minRating) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
+// ─── Provider ─────────────────────────────────────────────────────
+export const ProductProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  // Core data
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Search & filter state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState<SortOption>("default");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useState<ProductFilters>(DEFAULT_FILTERS);
+
+  // Modal state
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterSidebarOpen, setFilterSidebarOpen] = useState(false);
+
+  // Debounced search
+  const debouncedSearch = useDebounce(searchTerm, 300);
+
+  // Fetch products
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      const data = await fetchAllProducts();
+      setProducts(data);
+      setIsLoading(false);
+    };
+    loadData();
+  }, []);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, filters, sortOption]);
+
+  // Derived: all categories & brands
+  const allCategories = useMemo(
+    () => [...new Set(products.map((p) => p.category))].sort(),
+    [products]
+  );
+
+  const allBrands = useMemo(
+    () =>
+      [...new Set(products.map((p) => p.brand).filter(Boolean))].sort(),
+    [products]
+  );
+
+  // Derived: filtered + sorted products
+  const filteredProducts = useMemo(() => {
+    const filtered = filterProducts(products, debouncedSearch, filters);
+    return sortProducts(filtered, sortOption);
+  }, [products, debouncedSearch, filters, sortOption]);
+
+  // Derived: pagination
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const totalResults = filteredProducts.length;
+
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  // Derived: best sellers
+  const bestSellers = useMemo(
+    () => [...products].sort((a, b) => b.rating - a.rating).slice(0, 8),
+    [products]
+  );
+
+  // ── Actions ───────────────────────────────────────────────────
+  const toggleCategory = useCallback((category: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(category)
+        ? prev.categories.filter((c) => c !== category)
+        : [...prev.categories, category],
+    }));
+  }, []);
+
+  const toggleBrand = useCallback((brand: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      brands: prev.brands.includes(brand)
+        ? prev.brands.filter((b) => b !== brand)
+        : [...prev.brands, brand],
+    }));
+  }, []);
+
+  const setPriceRange = useCallback((range: [number, number]) => {
+    setFilters((prev) => ({ ...prev, priceRange: range }));
+  }, []);
+
+  const setMinRating = useCallback((rating: number) => {
+    setFilters((prev) => ({ ...prev, minRating: rating }));
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFilters(DEFAULT_FILTERS);
+    setSearchTerm("");
+  }, []);
+
+  const removeFilter = useCallback((type: string, value: string) => {
+    setFilters((prev) => {
+      switch (type) {
+        case "category":
+          return {
+            ...prev,
+            categories: prev.categories.filter((c) => c !== value),
+          };
+        case "brand":
+          return {
+            ...prev,
+            brands: prev.brands.filter((b) => b !== value),
+          };
+        case "rating":
+          return { ...prev, minRating: 0 };
+        default:
+          return prev;
+      }
+    });
+  }, []);
+
+  const openProductModal = useCallback((product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  }, []);
+
+  const closeProductModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  }, []);
+
+  return (
+    <ProductContext.Provider
+      value={{
+        products,
+        filteredProducts,
+        paginatedProducts,
+        bestSellers,
+        selectedProduct,
+        allCategories,
+        allBrands,
+        totalPages,
+        totalResults,
+        isLoading,
+        searchTerm,
+        sortOption,
+        viewMode,
+        currentPage,
+        filters,
+        isModalOpen,
+        isFilterSidebarOpen,
+        setSearchTerm,
+        setSortOption,
+        setViewMode,
+        setCurrentPage,
+        setFilters,
+        toggleCategory,
+        toggleBrand,
+        setPriceRange,
+        setMinRating,
+        clearFilters,
+        removeFilter,
+        openProductModal,
+        closeProductModal,
+        setFilterSidebarOpen,
+      }}
+    >
+      {children}
+    </ProductContext.Provider>
+  );
 };
 
 export const useProducts = () => {
-    const context = useContext(ProductContext);
-    if (context === undefined) {
-        throw new Error("useProducts must be used within a ProductProvider");
-    }
-    return context;
+  const context = useContext(ProductContext);
+  if (context === undefined) {
+    throw new Error("useProducts must be used within a ProductProvider");
+  }
+  return context;
 };

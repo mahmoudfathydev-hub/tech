@@ -27,3 +27,13 @@ export interface ProductsResponse {
   skip: number;
   limit: number;
 }
+
+export type SortOption = "default" | "price-asc" | "price-desc" | "rating" | "name-asc" | "name-desc";
+export type ViewMode = "grid" | "list";
+
+export interface ProductFilters {
+  categories: string[];
+  brands: string[];
+  priceRange: [number, number];
+  minRating: number;
+}

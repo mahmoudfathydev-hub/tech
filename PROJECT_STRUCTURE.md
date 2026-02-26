@@ -11,13 +11,13 @@ E-Commerce Electronics Store
 │   │       ├── Orders
 │   │       └── Logout
 │   │
-│   └── Footer
+│   └── Footer                 (DONE)✔✔
 │       ├── About
 │       ├── Contact
 │       ├── Links
 │       └── Social Media
 │
-├── Home Page (/)
+├── Home Page (/)                 (DONE)✔✔
 │   ├── Hero Section
 │   │   ├── Banner Slider
 │   │   └── CTA Button
