@@ -53,12 +53,12 @@ const MobileCategories = () => {
                             className={`
                                 w-full flex items-center justify-between px-4 py-4 rounded-xl border text-sm font-semibold transition-all duration-300
                                 ${expandedCategory === category.slug
-                                    ? "text-[#2384eb] bg-[#f0f7ff] border-[#dbeafe]"
+                                    ? "text-[#1c6fd1] bg-blue-50 border-blue-100"
                                     : "text-gray-600 bg-gray-50 border-gray-100"}
                             `}
                         >
                             <div className="flex items-center gap-3">
-                                <category.icon className={`w-5 h-5 ${expandedCategory === category.slug ? "text-[#2384eb]" : "text-gray-400"}`} />
+                                <category.icon className={`w-5 h-5 ${expandedCategory === category.slug ? "text-[#1c6fd1]" : "text-gray-400"}`} />
                                 {category.name}
                             </div>
                             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${expandedCategory === category.slug ? "rotate-180" : ""}`} />
@@ -76,7 +76,7 @@ const MobileCategories = () => {
                                     <div className="p-4 grid grid-cols-2 gap-2 bg-gray-50/50 rounded-b-xl border-x border-b border-gray-100 -mt-1">
                                         {isLoading ? (
                                             <div className="col-span-2 py-6 flex flex-col items-center justify-center gap-2">
-                                                <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+                                                <Loader2 className="w-5 h-5 animate-spin text-[#1c6fd1]" />
                                                 <span className="text-[10px] text-gray-400 font-medium tracking-tight">Fetching brands...</span>
                                             </div>
                                         ) : brands.length > 0 ? (
@@ -84,11 +84,12 @@ const MobileCategories = () => {
                                                 <Link
                                                     key={brand}
                                                     href={`/products?category=${category.slug}&brand=${brand}`}
-                                                    className="px-3 py-2.5 bg-white rounded-lg border border-gray-100 text-[11px] font-bold text-gray-500 hover:text-blue-600 hover:border-blue-100 transition-all active:scale-95 text-center shadow-sm"
+                                                    className="px-3 py-2.5 bg-white rounded-lg border border-gray-100 text-[11px] font-bold text-gray-500 hover:text-[#1c6fd1] hover:border-blue-100 transition-all active:scale-95 text-center shadow-sm"
                                                 >
                                                     {brand}
                                                 </Link>
                                             ))
+
                                         ) : (
                                             <div className="col-span-2 py-4 text-center text-[10px] text-gray-400 italic">
                                                 No brands found

@@ -74,13 +74,13 @@ export default function MobileMenu() {
                                         key={link.id}
                                         href={link.href}
                                         className={`flex justify-between items-center px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-300 ${active
-                                            ? "text-[#2384eb] bg-[#f0f7ff] border-[#dbeafe]"
+                                            ? "text-[#1c6fd1] bg-blue-50 border-blue-100"
                                             : "text-gray-600 bg-gray-50 border-gray-100"
                                             }`}
                                     >
                                         {link.name}
                                         <span
-                                            className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[#2384eb]" : "hidden"
+                                            className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[#1c6fd1]" : "hidden"
                                                 }`}
                                         />
                                     </Link>
@@ -96,7 +96,7 @@ export default function MobileMenu() {
                             <Heart size={20} />
                             My Wishlist
                         </button>
-                        <button className="flex items-center gap-4 text-sm text-gray-600 hover:text-[#2384eb] transition-colors">
+                        <button className="flex items-center gap-4 text-sm text-gray-600 hover:text-[#1c6fd1] transition-colors">
                             <ShoppingCart size={20} />
                             Shopping Cart
                         </button>
@@ -104,11 +104,12 @@ export default function MobileMenu() {
                 </div>
 
                 <div className="p-6 border-t mt-auto bg-white">
-                    <button className="w-full py-4 bg-[#3A9AFF] text-white rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-200">
+                    <button className="w-full py-4 bg-[#1c6fd1] text-white rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-200">
                         <User size={18} />
                         Sign In
                     </button>
                 </div>
+
             </div>
 
         </div>

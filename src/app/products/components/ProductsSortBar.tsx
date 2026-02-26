@@ -44,14 +44,14 @@ export default function ProductsSortBar({
             {/* Results info */}
             <p className="text-sm text-muted-foreground">
                 Showing{" "}
-                <span className="font-medium text-foreground">{totalResults}</span>{" "}
+                <span className="font-medium text-[#1c6fd1]">{totalResults}</span>{" "}
                 results
                 {totalPages > 1 && (
                     <span>
                         {" · Page "}
-                        <span className="font-medium text-foreground">{currentPage}</span>
+                        <span className="font-medium text-[#1c6fd1]">{currentPage}</span>
                         {" of "}
-                        <span className="font-medium text-foreground">{totalPages}</span>
+                        <span className="font-medium text-[#1c6fd1]">{totalPages}</span>
                     </span>
                 )}
             </p>

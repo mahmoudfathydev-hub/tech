@@ -1,14 +1,20 @@
 import React from "react";
 import Image from "next/image";
 import { Product } from "@/types/product";
+import { useProducts } from "@/context/ProductContext";
 
 interface ProductCardProps {
     product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+    const { openProductModal } = useProducts();
+
     return (
-        <div className="card shrink-0 min-w-70 group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+        <div
+            onClick={() => openProductModal(product)}
+            className="card shrink-0 min-w-70 group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer"
+        >
             <div className="relative h-56 w-full bg-gray-50 dark:bg-gray-800/50 overflow-hidden">
                 <Image
                     src={product.thumbnail}
@@ -23,18 +29,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         </span>
                     </div>
                 )}
-                <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity ">
-                    <button className="p-2 bg-white/80 backdrop-blur-md rounded-full shadow-xl hover:bg-white transition-colors cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-                </div>
             </div>
 
             <div className="p-6">
                 <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] uppercase tracking-widest text-[#2384eb] font-bold">
+                    <span className="text-[10px] uppercase tracking-widest text-[#1c6fd1] font-bold">
                         {product.category}
                     </span>
                     <span className="h-1 w-1 bg-gray-300 rounded-full"></span>
@@ -53,7 +52,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col">
-                        <span className="text-2xl font-black text-[#2384eb]">
+                        <span className="text-2xl font-black text-[#1c6fd1]">
                             ${product.price}
                         </span>
                         {product.discountPercentage > 0 && (
@@ -62,7 +61,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                             </span>
                         )}
                     </div>
-                    <button className="p-3 bg-gray-900 dark:bg-[#2384eb] text-white rounded-2xl cursor-pointer transform active:scale-90 transition-all hover:shadow-lg hover:shadow-[#2384eb]/20">
+                    <button className="p-3 bg-gray-900 dark:bg-[#1c6fd1] text-white rounded-2xl cursor-pointer transform active:scale-90 transition-all hover:shadow-lg hover:shadow-[#1c6fd1]/20">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
@@ -72,5 +71,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
     );
 };
+
 
 export default ProductCard;

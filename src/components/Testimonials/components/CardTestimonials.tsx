@@ -49,7 +49,7 @@ const CardTestimonials = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
-        <div className="w-10 h-10 border-4 border-[#2384eb]/20 border-t-[#2384eb] rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#1c6fd1]/20 border-t-[#1c6fd1] rounded-full animate-spin" />
       </div>
     );
   }
@@ -69,14 +69,15 @@ const CardTestimonials = () => {
               data-aos-offset="200"
               data-aos-delay={idx * 100}
               className={`
-                                bg-[#6b6b6454] dark:bg-gray-900 
-                                rounded-3xl 
-                                border border-gray-100 dark:border-white/10
-                                shadow-xl
-                                p-6 md:p-8
-                                ${isMiddle ? "mb-0 md:mb-0" : "mb-8 md:mb-20"}`}
+                                  bg-[#6b6b6454] dark:bg-gray-900 
+                                  rounded-3xl 
+                                  border border-gray-100 dark:border-white/10
+                                  shadow-xl
+                                  p-6 md:p-8
+                                  ${isMiddle ? "mb-0 md:mb-0" : "mb-8 md:mb-20"}`}
             >
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-[#2384eb] to-[#144a94] flex items-center justify-center text-white text-lg md:text-xl font-bold mb-4 md:mb-6">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-linear-to-br from-[#1c6fd1] to-[#0f3d75] flex items-center justify-center text-white text-lg md:text-xl font-bold mb-4 md:mb-6">
+
                 {(review.reviewerName || "U").charAt(0)}
               </div>
               <div className="flex justify-between items-center mb-4">

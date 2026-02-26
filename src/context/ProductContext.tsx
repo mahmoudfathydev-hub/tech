@@ -176,22 +176,190 @@ export const ProductProvider = ({
     loadData();
   }, []);
 
+  // Sync with URL params
+  // To avoid Suspense issues at the root, we use a component that only mounts on client
+  // and reads params.
+  return (
+    <ProductContext.Provider
+      value={{
+        products,
+        filteredProducts: [], // Placeholder, see below
+        paginatedProducts: [], // Placeholder, see below
+        bestSellers: [], // Placeholder, see below
+        selectedProduct,
+        allCategories: [], // Placeholder
+        allBrands: [], // Placeholder
+        totalPages: 0,
+        totalResults: 0,
+        isLoading,
+        searchTerm,
+        sortOption,
+        viewMode,
+        currentPage,
+        filters,
+        isModalOpen,
+        isFilterSidebarOpen,
+        setSearchTerm,
+        setSortOption,
+        setViewMode,
+        setCurrentPage,
+        setFilters,
+        toggleCategory: () => { }, // Placeholder
+        toggleBrand: () => { }, // Placeholder
+        setPriceRange: () => { },
+        setMinRating: () => { },
+        clearFilters: () => { },
+        removeFilter: () => { },
+        openProductModal: () => { },
+        closeProductModal: () => { },
+        setFilterSidebarOpen,
+      }}
+    >
+      <ProductProviderInner
+        products={products}
+        isLoading={isLoading}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        filters={filters}
+        setFilters={setFilters}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        isFilterSidebarOpen={isFilterSidebarOpen}
+        setFilterSidebarOpen={setFilterSidebarOpen}
+        debouncedSearch={debouncedSearch}
+      >
+        {children}
+      </ProductProviderInner>
+    </ProductContext.Provider>
+  );
+};
+
+// Internal provider to handle logic and optional Suspense
+function ProductProviderInner({
+  children,
+  products,
+  isLoading,
+  searchTerm,
+  setSearchTerm,
+  sortOption,
+  setSortOption,
+  viewMode,
+  setViewMode,
+  currentPage,
+  setCurrentPage,
+  filters,
+  setFilters,
+  selectedProduct,
+  setSelectedProduct,
+  isModalOpen,
+  setIsModalOpen,
+  isFilterSidebarOpen,
+  setFilterSidebarOpen,
+  debouncedSearch
+}: any) {
+  // Use search params for reactive updates
+  return (
+    <Suspense fallback={null}>
+      <URLSync setFilters={setFilters} setSearchTerm={setSearchTerm} />
+      <ProductLogic
+        products={products}
+        isLoading={isLoading}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        filters={filters}
+        setFilters={setFilters}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        isFilterSidebarOpen={isFilterSidebarOpen}
+        setFilterSidebarOpen={setFilterSidebarOpen}
+        debouncedSearch={debouncedSearch}
+      >
+        {children}
+      </ProductLogic>
+    </Suspense>
+  );
+}
+
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
+function URLSync({ setFilters, setSearchTerm }: any) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const urlCategory = searchParams.get("category");
+    const urlBrand = searchParams.get("brand");
+    const urlSearch = searchParams.get("search");
+
+    if (urlCategory || urlBrand || urlSearch) {
+      setFilters((prev: any) => ({
+        ...prev,
+        categories: urlCategory ? [urlCategory] : prev.categories,
+        brands: urlBrand ? [urlBrand] : prev.brands,
+      }));
+      if (urlSearch) setSearchTerm(urlSearch);
+    }
+  }, [searchParams, setFilters, setSearchTerm]);
+
+  return null;
+}
+
+function ProductLogic({
+  children,
+  products,
+  isLoading,
+  searchTerm,
+  setSearchTerm,
+  sortOption,
+  setSortOption,
+  viewMode,
+  setViewMode,
+  currentPage,
+  setCurrentPage,
+  filters,
+  setFilters,
+  selectedProduct,
+  setSelectedProduct,
+  isModalOpen,
+  setIsModalOpen,
+  isFilterSidebarOpen,
+  setFilterSidebarOpen,
+  debouncedSearch
+}: any) {
+
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearch, filters, sortOption]);
+  }, [debouncedSearch, filters, sortOption, setCurrentPage]);
 
   // Derived: all categories & brands
   const allCategories = useMemo(
-    () => [...new Set(products.map((p) => p.category))].sort(),
+    () => [...new Set(products.map((p: Product) => p.category))].sort() as string[],
     [products]
   );
 
   const allBrands = useMemo(
     () =>
-      [...new Set(products.map((p) => p.brand).filter(Boolean))].sort(),
+      [...new Set(products.map((p: Product) => p.brand).filter(Boolean))].sort() as string[],
     [products]
   );
+
 
   // Derived: filtered + sorted products
   const filteredProducts = useMemo(() => {
@@ -210,54 +378,54 @@ export const ProductProvider = ({
 
   // Derived: best sellers
   const bestSellers = useMemo(
-    () => [...products].sort((a, b) => b.rating - a.rating).slice(0, 8),
+    () => [...products].sort((a: Product, b: Product) => b.rating - a.rating).slice(0, 8),
     [products]
   );
 
   // ── Actions ───────────────────────────────────────────────────
   const toggleCategory = useCallback((category: string) => {
-    setFilters((prev) => ({
+    setFilters((prev: any) => ({
       ...prev,
       categories: prev.categories.includes(category)
-        ? prev.categories.filter((c) => c !== category)
+        ? prev.categories.filter((c: any) => c !== category)
         : [...prev.categories, category],
     }));
-  }, []);
+  }, [setFilters]);
 
   const toggleBrand = useCallback((brand: string) => {
-    setFilters((prev) => ({
+    setFilters((prev: any) => ({
       ...prev,
       brands: prev.brands.includes(brand)
-        ? prev.brands.filter((b) => b !== brand)
+        ? prev.brands.filter((b: any) => b !== brand)
         : [...prev.brands, brand],
     }));
-  }, []);
+  }, [setFilters]);
 
   const setPriceRange = useCallback((range: [number, number]) => {
-    setFilters((prev) => ({ ...prev, priceRange: range }));
-  }, []);
+    setFilters((prev: any) => ({ ...prev, priceRange: range }));
+  }, [setFilters]);
 
   const setMinRating = useCallback((rating: number) => {
-    setFilters((prev) => ({ ...prev, minRating: rating }));
-  }, []);
+    setFilters((prev: any) => ({ ...prev, minRating: rating }));
+  }, [setFilters]);
 
   const clearFilters = useCallback(() => {
     setFilters(DEFAULT_FILTERS);
     setSearchTerm("");
-  }, []);
+  }, [setFilters, setSearchTerm]);
 
   const removeFilter = useCallback((type: string, value: string) => {
-    setFilters((prev) => {
+    setFilters((prev: any) => {
       switch (type) {
         case "category":
           return {
             ...prev,
-            categories: prev.categories.filter((c) => c !== value),
+            categories: prev.categories.filter((c: any) => c !== value),
           };
         case "brand":
           return {
             ...prev,
-            brands: prev.brands.filter((b) => b !== value),
+            brands: prev.brands.filter((b: any) => b !== value),
           };
         case "rating":
           return { ...prev, minRating: 0 };
@@ -265,17 +433,17 @@ export const ProductProvider = ({
           return prev;
       }
     });
-  }, []);
+  }, [setFilters]);
 
   const openProductModal = useCallback((product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
-  }, []);
+  }, [setSelectedProduct, setIsModalOpen]);
 
   const closeProductModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedProduct(null);
-  }, []);
+  }, [setSelectedProduct, setIsModalOpen]);
 
   return (
     <ProductContext.Provider
@@ -316,9 +484,10 @@ export const ProductProvider = ({
       {children}
     </ProductContext.Provider>
   );
-};
+}
 
 export const useProducts = () => {
+
   const context = useContext(ProductContext);
   if (context === undefined) {
     throw new Error("useProducts must be used within a ProductProvider");

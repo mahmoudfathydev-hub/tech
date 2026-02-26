@@ -58,7 +58,7 @@ export default function ProductsFilter({
 
     return (
         <div className="flex flex-wrap items-center gap-2 py-3">
-            <span className="text-xs font-medium text-muted-foreground mr-1">
+            <span className="text-xs font-medium text-[#1c6fd1] mr-1">
                 Active Filters:
             </span>
             {activeFilters.map((filter) => (
@@ -74,7 +74,7 @@ export default function ProductsFilter({
                 id="clear-all-filters"
                 variant="ghost"
                 size="sm"
-                className="text-xs text-muted-foreground hover:text-destructive h-7"
+                className="text-xs text-[#1c6fd1] hover:text-destructive h-7"
                 onClick={onClearAll}
             >
                 Clear All

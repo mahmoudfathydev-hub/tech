@@ -27,8 +27,8 @@ const animationProps: MotionProps = {
 
 interface ShinyButtonProps
   extends
-    Omit<React.HTMLAttributes<HTMLElement>, keyof MotionProps>,
-    MotionProps {
+  Omit<React.HTMLAttributes<HTMLElement>, keyof MotionProps>,
+  MotionProps {
   children: React.ReactNode
   className?: string
 }
@@ -41,7 +41,7 @@ export const ShinyButton = React.forwardRef<
     <motion.button
       ref={ref}
       className={cn(
-        "relative cursor-pointer rounded-xl px-8 py-3 font-medium bg-[#2384eb] text-white shadow-lg backdrop-blur-xl transition-all duration-300 ease-in-out hover:brightness-110 hover:shadow-xl",
+        "relative cursor-pointer rounded-xl px-8 py-3 font-medium bg-[#1c6fd1] text-white shadow-lg backdrop-blur-xl transition-all duration-300 ease-in-out hover:brightness-110 hover:shadow-xl",
         className
       )}
       {...animationProps}

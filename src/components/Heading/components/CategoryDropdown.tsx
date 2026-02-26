@@ -62,7 +62,7 @@ const CategoryDropdown = () => {
                 className={`
                     flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg
                     transition-all duration-300 ease-out
-                    ${isOpen ? "text-[#2384eb] bg-blue-50/80 shadow-sm" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100/50"}
+                    ${isOpen ? "text-[#1c6fd1] bg-blue-50/80 shadow-sm" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100/50"}
                 `}
             >
                 Categories
@@ -84,13 +84,15 @@ const CategoryDropdown = () => {
                             </h3>
                             <div className="space-y-1">
                                 {CATEGORIES.map((category) => (
-                                    <button
+                                    <Link
                                         key={category.slug}
+                                        href={`/products?category=${category.slug}`}
                                         onMouseEnter={() => handleCategoryHover(category)}
+                                        onClick={() => setIsOpen(false)}
                                         className={`
                                             w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all duration-200 group
                                             ${selectedCategory?.slug === category.slug
-                                                ? "bg-white text-[#2384eb] shadow-md shadow-blue-500/5 ring-1 ring-blue-50"
+                                                ? "bg-white text-[#1c6fd1] shadow-md shadow-blue-500/5 ring-1 ring-blue-50"
                                                 : "text-gray-600 hover:bg-white hover:text-gray-900"}
                                         `}
                                     >
@@ -107,10 +109,11 @@ const CategoryDropdown = () => {
                                         {selectedCategory?.slug === category.slug && (
                                             <ChevronRight className="w-4 h-4 ml-auto opacity-50" />
                                         )}
-                                    </button>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
+
 
                         <div className="w-1/2 p-4 flex flex-col">
                             <AnimatePresence mode="wait">
@@ -127,7 +130,7 @@ const CategoryDropdown = () => {
                                             <h3 className="text-xs font-bold text-gray-900 uppercase tracking-tight">
                                                 {selectedCategory.name} Brands
                                             </h3>
-                                            <span className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold">
+                                            <span className="text-[10px] bg-blue-50 text-[#1c6fd1] px-2 py-0.5 rounded-full font-bold">
                                                 {isLoading ? "..." : brands.length}
                                             </span>
                                         </div>
@@ -136,7 +139,7 @@ const CategoryDropdown = () => {
                                             {isLoading ? (
                                                 <div className="h-full flex flex-col items-center justify-center gap-3">
                                                     <div className="relative">
-                                                        <div className="w-8 h-8 rounded-full border-2 border-blue-50 border-t-blue-500 animate-spin" />
+                                                        <div className="w-8 h-8 rounded-full border-2 border-blue-50 border-t-[#1c6fd1] animate-spin" />
                                                     </div>
                                                     <span className="text-[10px] font-medium text-gray-400">Loading premium brands...</span>
                                                 </div>
@@ -146,10 +149,11 @@ const CategoryDropdown = () => {
                                                         <Link
                                                             key={brand}
                                                             href={`/products?category=${selectedCategory.slug}&brand=${brand}`}
-                                                            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 group"
+                                                            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-500 hover:text-[#1c6fd1] hover:bg-blue-50 transition-all duration-200 group"
+                                                            onClick={() => setIsOpen(false)}
                                                         >
                                                             {brand}
-                                                            <div className="w-1 h-1 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                            <div className="w-1 h-1 rounded-full bg-[#1c6fd1] opacity-0 group-hover:opacity-100 transition-opacity" />
                                                         </Link>
                                                     ))}
                                                 </div>
@@ -164,7 +168,7 @@ const CategoryDropdown = () => {
                                 ) : (
                                     <div className="h-full flex flex-col items-center justify-center text-center p-6 bg-blue-50/20 rounded-xl border border-dashed border-blue-100">
                                         <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3">
-                                            <Smartphone className="w-6 h-6 text-blue-500" />
+                                            <Smartphone className="w-6 h-6 text-[#1c6fd1]" />
                                         </div>
                                         <h4 className="text-sm font-bold text-gray-900 mb-1">Select a Category</h4>
                                         <p className="text-[11px] text-gray-400">Hover over a category to see available brands and premium products.</p>

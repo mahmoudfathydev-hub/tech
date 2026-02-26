@@ -38,7 +38,7 @@ function FilterContent({
         <div className="space-y-6">
             {/* Categories */}
             <div>
-                <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">
+                <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-[#1c6fd1]">
                     Categories
                 </h3>
                 <div className="space-y-1.5">
@@ -65,7 +65,7 @@ function FilterContent({
 
             {/* Brands */}
             <div>
-                <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">
+                <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-[#1c6fd1]">
                     Brands
                 </h3>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto">
@@ -92,7 +92,7 @@ function FilterContent({
 
             {/* Rating */}
             <div>
-                <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-muted-foreground">
+                <h3 className="text-sm font-semibold mb-3 uppercase tracking-wider text-[#1c6fd1]">
                     Minimum Rating
                 </h3>
                 <div className="space-y-1.5">

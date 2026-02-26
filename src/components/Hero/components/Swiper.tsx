@@ -78,26 +78,27 @@ const HeroSwiper: React.FC = () => {
 
     const accentColors = [
         {
-            gradient: "from-[#4aa8ff] via-[#2384eb] to-[#1d6fd1]",
+            gradient: "from-[#1c6fd1] via-[#1c6fd1] to-[#0f3d75]",
             badge: "bg-white/15 text-white border border-white/30 backdrop-blur-md",
-            dot: "bg-[#f87171]"
+            dot: "bg-white"
         },
         {
-            gradient: "from-[#2384eb] via-[#1d6fd1] to-[#185bb0]",
+            gradient: "from-[#1c6fd1] via-[#0f3d75] to-[#0b2f5f]",
             badge: "bg-white/15 text-white border border-white/30 backdrop-blur-md",
-            dot: "bg-[#ef4444]"
+            dot: "bg-white"
         },
         {
-            gradient: "from-[#1d6fd1] via-[#185bb0] to-[#144a94]",
+            gradient: "from-[#1c6fd1] via-[#1c6fd1] to-[#1c6fd1]",
             badge: "bg-white/15 text-white border border-white/30 backdrop-blur-md",
-            dot: "bg-[#dc2626]"
+            dot: "bg-white"
         },
         {
-            gradient: "from-[#144a94] via-[#0f3d7a] to-[#0b2f5f]",
+            gradient: "from-[#0f3d75] via-[#0f3d7a] to-[#0b2f5f]",
             badge: "bg-white/15 text-white border border-white/30 backdrop-blur-md",
-            dot: "bg-[#7f1d1d]"
+            dot: "bg-white"
         }
     ];
+
 
     return (
         <div className="hero-swiper-wrapper h-full w-full rounded-3xl overflow-hidden relative">
@@ -153,9 +154,10 @@ const HeroSwiper: React.FC = () => {
                                         )}
                                     </div>
                                     <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-                                        <button className="px-6 sm:px-8 py-2.5 sm:py-3.5 bg-white text-[#1d6fd1] rounded-2xl font-bold text-sm sm:text-base hover:bg-slate-50 transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-black/20 cursor-pointer flex items-center gap-2">
+                                        <button className="px-6 sm:px-8 py-2.5 sm:py-3.5 bg-white text-[#1c6fd1] rounded-2xl font-bold text-sm sm:text-base hover:bg-slate-50 transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-black/20 cursor-pointer flex items-center gap-2">
                                             Add to Cart
                                         </button>
+
                                         <button className="px-6 sm:px-8 py-2.5 sm:py-3.5 bg-white/10 text-white rounded-2xl font-bold text-sm sm:text-base backdrop-blur-md border border-white/30 hover:bg-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
                                             View Specs
                                         </button>

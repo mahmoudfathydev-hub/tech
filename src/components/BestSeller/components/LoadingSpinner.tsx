@@ -3,8 +3,9 @@ import React from "react";
 const LoadingSpinner = () => {
     return (
         <div className="py-20 flex justify-center items-center h-screen">
-            <div className="w-12 h-12 border-4 border-[#2384eb]/20 border-t-[#2384eb] rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#1c6fd1]/20 border-t-[#1c6fd1] rounded-full animate-spin"></div>
         </div>
+
     );
 };
 

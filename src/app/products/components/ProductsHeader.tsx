@@ -17,18 +17,16 @@ export default function ProductsHeader({
       {/* Title Section */}
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl text-[#1c6fd1] font-bold tracking-tight sm:text-4xl">
             All Products
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base">
             Discover our curated collection of premium tech products.
-            <span className="ml-1 font-medium text-foreground">
+            <span className="ml-1 font-medium text-[#1c6fd1]">
               {totalResults} products
             </span>
           </p>
         </div>
-
-        {/* Mobile Filter Toggle (Visible only on mobile/tablet) */}
         <Button
           id="mobile-filter-toggle"
           variant="outline"
