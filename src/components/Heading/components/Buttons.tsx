@@ -1,9 +1,31 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { ShinyButton } from "@/components/ui/shiny-button";
-import { ShoppingCart, Heart, User } from "lucide-react";
+import { ShoppingCart, Heart, User, LogOut } from "lucide-react";
+import Link from "next/link";
 
 function Buttons() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const checkAuth = () => {
+            const user = localStorage.getItem("currentUser");
+            setIsLoggedIn(!!user);
+        };
+
+        checkAuth();
+        // Check on focus or storage events (optional but good for consistency)
+        window.addEventListener('storage', checkAuth);
+        return () => window.removeEventListener('storage', checkAuth);
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("currentUser");
+        setIsLoggedIn(false);
+        window.location.reload();
+    };
+
     return (
         <div className="flex items-center gap-2">
             <button
@@ -25,12 +47,25 @@ function Buttons() {
                 </span>
             </button>
             <div className="w-px h-6 bg-gray-200 mx-1" />
-            <ShinyButton className="text-sm px-5 py-2 rounded-xl">
-                <span className="flex items-center gap-2">
-                    <User size={15} strokeWidth={2} />
-                    Sign In
-                </span>
-            </ShinyButton>
+
+            {!isLoggedIn ? (
+                <ShinyButton className="text-sm px-5 py-2 rounded-xl">
+                    <Link href={"/signup"}>
+                        <span className="flex items-center gap-2">
+                            <User size={15} strokeWidth={2} />
+                            Sign In
+                        </span>
+                    </Link>
+                </ShinyButton>
+            ) : (
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-600 border border-border rounded-xl hover:bg-red-50 transition-all"
+                >
+                    <LogOut size={15} />
+                    Log Out
+                </button>
+            )}
         </div>
     );
 }
