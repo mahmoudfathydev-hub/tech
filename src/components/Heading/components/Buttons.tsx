@@ -16,11 +16,11 @@ function Buttons() {
                 </span>
             </button>
             <button
-                className="relative p-2.5 rounded-xl text-gray-500 hover:text-[#2384eb] hover:bg-blue-50 transition-all duration-300 cursor-pointer"
+                className="relative p-2.5 rounded-xl text-gray-500 hover:text-[#1c6fd1] hover:bg-blue-50 transition-all duration-300 cursor-pointer"
                 aria-label="Shopping Cart"
             >
                 <ShoppingCart size={20} strokeWidth={1.8} />
-                <span className="absolute -top-0.5 -right-0.5 bg-[#2384eb] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
+                <span className="absolute -top-0.5 -right-0.5 bg-[#1c6fd1] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full ring-2 ring-white">
                     0
                 </span>
             </button>

@@ -51,11 +51,10 @@ export default function ProductsPage() {
       <div className="container px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
         {/* Header with search */}
         <ProductsHeader
-          searchTerm={searchTerm}
           totalResults={totalResults}
-          onSearchChange={setSearchTerm}
           onOpenFilters={() => setFilterSidebarOpen(true)}
         />
+
 
         {/* Active filter tags */}
         <ProductsFilter

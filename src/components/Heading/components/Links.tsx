@@ -31,15 +31,16 @@ function Links() {
                             relative px-4 py-2 text-sm font-medium rounded-lg
                             transition-all duration-300 ease-out
                             ${isActive
-                                ? "text-[#2384eb] bg-blue-50"
+                                ? "text-[#1c6fd1] bg-blue-50"
                                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                             }
                         `}
                     >
                         {link.name}
                         {isActive && (
-                            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#2384eb] rounded-full" />
+                            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-[#1c6fd1] rounded-full" />
                         )}
+
                     </Link>
                 );
             })}
