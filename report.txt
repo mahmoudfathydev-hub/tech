@@ -63,7 +63,7 @@ src/
 ## 2. PROJECT STRUCTURE
 
 ### Full Tree of the Project
-```
+
 tech/
 ├── .git/                     # Git version control
 ├── .next/                    # Next.js build output
